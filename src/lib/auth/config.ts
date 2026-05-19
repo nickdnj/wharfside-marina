@@ -53,12 +53,10 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    role: "super_admin" | "eci_admin" | "board" | "holder";
-    holderId: string | null;
-  }
-}
+/* JWT augmentation deferred — next-auth v5 beta exports `JWT` from the
+ * main entry, but the `next-auth/jwt` subpath augmentation trips
+ * TypeScript's module resolver under `bundler`. STORY-05 will wire this
+ * up properly once we settle on the final auth flow. */
 
 /* ============================================================
  * Credentials provider — first factor only (admin/board).
@@ -81,8 +79,12 @@ const credentialsInputSchema = z.object({
   totpVerified: z.literal("true").optional(),
 });
 
+// @auth/core version skew between next-auth@5 and @auth/drizzle-adapter —
+// resolved in STORY-05.
+type AnyAdapter = NonNullable<NextAuthConfig["adapter"]>;
+
 export const authConfig: NextAuthConfig = {
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db) as unknown as AnyAdapter,
   session: {
     strategy: "database",
     maxAge: 60 * 60 * 24 * 30, // 30 days

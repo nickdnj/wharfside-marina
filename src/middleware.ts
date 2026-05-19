@@ -1,36 +1,29 @@
 /**
- * Next.js middleware — enforces auth + role on protected paths.
+ * Next.js middleware — coarse-grained route gate.
+ *
+ * Strategy: middleware runs on the Edge runtime, where the Auth.js v5
+ * Drizzle adapter and `@node-rs/argon2` cannot load. So this layer only
+ * checks for the presence of a session cookie — the actual session
+ * validity (role + status) is enforced by the page or route handler
+ * via `auth()` from `@/lib/auth/config` (Node runtime).
  *
  * Path policy:
- *   • `/admin/*`   → must be signed in AND role ∈ {super_admin, eci_admin, board}
- *   • `/holder/*`  → must be signed in AND role === holder (admins may also
- *                    enter to impersonate / debug — they see a banner)
- *   • `/api/admin/*` → 403 JSON if not admin/board
- *   • `/api/holder/me/*` → 401/403 JSON if not the holder
- *   • Everything else → public
+ *   • `/admin/*` and `/holder/*` (and their `/api/*` siblings) require
+ *     the session cookie. If absent → redirect to `/sign-in` (or 401 JSON).
+ *   • Every other path is public.
  *
- * On a missing/invalid session, redirect to `/sign-in?callbackUrl=...`.
- * On a role mismatch, redirect signed-in user to `/auth/forbidden`
- * (the page renders a 403 explainer). Privacy note: we return 403, not
- * 404, on role mismatch — per the architecture decision.
+ * STORY-05 will replace this with a proper edge-safe Auth.js config that
+ * decodes the JWT and enforces role checks at the edge.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "@/lib/auth/config";
 
+const SESSION_COOKIE = "wharfside.session-token";
 const ADMIN_PREFIXES = ["/admin", "/api/admin"];
 const HOLDER_PREFIXES = ["/holder", "/api/holder"];
-const AUTHED_ROLES_ADMIN = new Set(["super_admin", "eci_admin", "board"]);
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     *  - _next/static, _next/image
-     *  - favicon, fonts, public assets
-     *  - Auth.js routes (they handle their own auth)
-     *  - Patron site public routes (let through; route handlers do their own checks)
-     */
     "/((?!_next/static|_next/image|favicon.ico|fonts/|images/|api/auth/).*)",
   ],
 };
@@ -45,49 +38,18 @@ function isPrefixed(pathname: string, prefixes: string[]): boolean {
   );
 }
 
-export default async function middleware(req: NextRequest) {
+export default function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
+  const needsAuth =
+    isPrefixed(pathname, ADMIN_PREFIXES) || isPrefixed(pathname, HOLDER_PREFIXES);
+  if (!needsAuth) return NextResponse.next();
 
-  const needsAdmin = isPrefixed(pathname, ADMIN_PREFIXES);
-  const needsHolder = isPrefixed(pathname, HOLDER_PREFIXES);
+  if (req.cookies.has(SESSION_COOKIE)) return NextResponse.next();
 
-  if (!needsAdmin && !needsHolder) {
-    return NextResponse.next();
+  if (isJsonRoute(pathname)) {
+    return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
-
-  const session = await auth();
-  const role = session?.user?.role;
-
-  /* ---------- not signed in ---------- */
-  if (!role) {
-    if (isJsonRoute(pathname)) {
-      return NextResponse.json(
-        { error: "unauthenticated" },
-        { status: 401 },
-      );
-    }
-    const signInUrl = new URL("/sign-in", req.url);
-    signInUrl.searchParams.set("callbackUrl", pathname + search);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  /* ---------- signed in but wrong role ---------- */
-  if (needsAdmin && !AUTHED_ROLES_ADMIN.has(role)) {
-    if (isJsonRoute(pathname)) {
-      return NextResponse.json({ error: "forbidden" }, { status: 403 });
-    }
-    return NextResponse.redirect(new URL("/auth/forbidden", req.url));
-  }
-
-  if (needsHolder && role !== "holder" && !AUTHED_ROLES_ADMIN.has(role)) {
-    /* `holder` and admins both allowed into `/holder/*` (admins for support);
-       board users are not. */
-    if (isJsonRoute(pathname)) {
-      return NextResponse.json({ error: "forbidden" }, { status: 403 });
-    }
-    return NextResponse.redirect(new URL("/auth/forbidden", req.url));
-  }
-
-  /* ---------- ok ---------- */
-  return NextResponse.next();
+  const signInUrl = new URL("/sign-in", req.url);
+  signInUrl.searchParams.set("callbackUrl", pathname + search);
+  return NextResponse.redirect(signInUrl);
 }
