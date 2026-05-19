@@ -1,0 +1,56 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    ":rebaseStalePrs"
+  ],
+  "timezone": "America/New_York",
+  "schedule": ["before 5am on monday"],
+  "labels": ["dependencies", "renovate"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "packageRules": [
+    {
+      "description": "Group all minor + patch updates together; auto-merge after CI passes.",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "all non-major dependencies",
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Major updates: separate PR per dep, never auto-merge.",
+      "matchUpdateTypes": ["major"],
+      "groupName": null,
+      "automerge": false
+    },
+    {
+      "description": "Auth.js is on a beta line — pin and inspect each update.",
+      "matchPackageNames": ["next-auth", "@auth/drizzle-adapter"],
+      "automerge": false,
+      "addLabels": ["auth-review"]
+    },
+    {
+      "description": "Drizzle ORM + drizzle-kit move together.",
+      "matchPackageNames": ["drizzle-orm", "drizzle-kit"],
+      "groupName": "drizzle"
+    },
+    {
+      "description": "Next.js — major needs care.",
+      "matchPackageNames": ["next", "eslint-config-next"],
+      "groupName": "nextjs"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true,
+    "schedule": ["at any time"]
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on monday"]
+  }
+}

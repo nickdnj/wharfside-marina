@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "description": "2 marina configs — 1 active (current pre-restoration), 1 draft (post-restoration projection for 2028).",
+    "constraint": "one_active_config UNIQUE INDEX — only one row with is_active=true at a time.",
+    "slips_link": "All slips in slips.json are seeded against the active config. The draft config has no slips yet — they are cloned at activation time per FR-3.1.1."
+  },
+  "configs": [
+    {
+      "name": "FY26 Pre-Restoration",
+      "effective_date": "2026-04-01",
+      "is_active": true,
+      "notes": "Current marina layout. Dock C is restoration-pending (scope: 2027–2028) — C1..C12 are Restricted tier due to shallower water and limited amenities; C13..C16 are full-service. After restoration completes, the post-restoration config replaces this one.",
+      "_created_by_email": "nickd@demarconet.com"
+    },
+    {
+      "name": "FY28 Post-Restoration (draft)",
+      "effective_date": "2028-04-01",
+      "is_active": false,
+      "notes": "Projected layout after C-dock restoration. C1..C12 reclassified Standard (deepened to 5.0ft MLW); C13..C16 unchanged. Slip count remains 86. Slips NOT yet cloned — clone at activation (FR-3.1.1).",
+      "_created_by_email": "nickd@demarconet.com"
+    }
+  ]
+}

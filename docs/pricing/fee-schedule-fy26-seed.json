@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "name": "FY26 Active Schedule (strawman)",
+    "schedule_id_when_seeded": null,
+    "state_when_seeded": "active",
+    "season_year": 2026,
+    "effective_start": "2026-04-15",
+    "effective_end": "2026-10-31",
+    "_note_to_nick": "PLACEHOLDER VALUES. The base rates ($4500 / $3500 / $2800), 0.75× resident multiplier, 0.55× half-season multiplier, $4.50/ft/night transient, and $350 amenity fee are all the architecture's strawman numbers. Replace with WMCA's actual FY26 board-approved rate card before this is used for anything real. The SHAPE of this JSON is locked (matches Architecture §7.2 base_config); the VALUES are not.",
+    "_pricing_engine_ref": "Architecture §7.3 resolveFee()",
+    "_decisions_locked_2026-05-19": [
+      "Q-AMENPRO1 RESOLVED — half-season amenity is prorated 0.50× of annual.",
+      "Within residents (people who live at WMCA), owners and renters price identically (both map to 'resident' multiplier 0.75).",
+      "Owners always get a discount — non-resident-owners (own a WMCA condo but don't live there) get a discount vs. pure non-residents. Schema expanded from 2 to 3 buckets: resident, non_resident_owner, non_resident.",
+      "Non-resident-owner discount magnitude is intentionally Modeler-driven — board will project revenue at various values via the Scenario Modeler and lock the rate before FY27. Placeholder: 0.85.",
+      "Rounding rule: banker's rounding (half-to-even, IEEE 754)."
+    ],
+    "_open_questions": [],
+    "_rounding_implementation_note": "JavaScript's Math.round is half-away-from-zero, not half-to-even. Use a banker's-rounding helper: `Math.round((x % 1 === 0.5 && Math.floor(x) % 2 === 0) ? Math.floor(x) : x)` for the .5 case, or use a decimal library (e.g., decimal.js with ROUND_HALF_EVEN). Apply at the FINAL total step only — don't round intermediate base/amenity values."
+  },
+
+  "model": "tier_based",
+
+  "base_rates_by_tier": {
+    "Premium":    { "annual": 4500 },
+    "Standard":   { "annual": 3500 },
+    "Restricted": { "annual": 2800 }
+  },
+
+  "holder_multipliers": {
+    "resident":           0.75,
+    "non_resident_owner": 0.85,
+    "non_resident":       1.00,
+    "_comment_non_resident_owner": "PLACEHOLDER 0.85 (midpoint between resident 0.75 and non_resident 1.00). The actual value is intentionally a Modeler-driven decision — the board will use the Scenario Modeler to project revenue impact at various values and lock the rate before FY27. The pricing engine reads this value from config; do not hardcode."
+  },
+
+  "lease_type_multipliers": {
+    "FULL_SEASON":   1.00,
+    "HALF_SEASON_1": 0.55,
+    "HALF_SEASON_2": 0.55,
+    "TRANSIENT":     null
+  },
+
+  "transient_per_foot_per_night": 4.50,
+
+  "amenity_fee": {
+    "annual": 350,
+    "waived_for_resident": true,
+    "half_season_proration": 0.50,
+    "_note": "half_season_proration applies when leaseType in (HALF_SEASON_1, HALF_SEASON_2) AND amenity is not waived. STRAWMAN — PRD §3.6.1 [VERIFY] with board."
+  },
+
+  "buy_in": {
+    "amount": 0,
+    "applies_to": ["non_resident"],
+    "_note": "Not currently in effect. Architecture supports it; set amount > 0 if board reintroduces."
+  },
+
+  "premium_surcharge_uses_slip_fee_modifier": true,
+
+  "_holder_state_mapping": {
+    "_comment": "App-level mapping from PRD's 4 holder states to pricing buckets. Locked 2026-05-19.",
+    "resident-owner":        "resident",
+    "resident-renter":       "resident",
+    "non-resident-owner":    "non_resident_owner",
+    "non-resident":          "non_resident"
+  },
+
+  "_slip_fee_modifier_examples": {
+    "_comment": "fee_modifier is per-slip on the slip table, not the schedule. Common values:",
+    "Premium-corner":  1.10,
+    "Premium-standard": 1.00,
+    "Standard-typical": 1.00,
+    "Restricted-shallow": 1.00,
+    "Restricted-tidal-limited": 0.90
+  }
+}

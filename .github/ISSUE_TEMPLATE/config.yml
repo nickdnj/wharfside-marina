@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/nickdnj/wharfside-marina/tree/main/docs
+    about: Read the PRD, architecture, UX spec, dev plan, QA strategy, and runbook before filing.

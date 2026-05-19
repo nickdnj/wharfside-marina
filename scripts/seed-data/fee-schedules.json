@@ -1,0 +1,186 @@
+{
+  "_meta": {
+    "description": "5 fee schedules — one per state. Only ONE row may have state='active' (UNIQUE INDEX one_active_schedule).",
+    "state_machine": "draft → submitted → approved → active → archived (one-way)"
+  },
+  "schedules": [
+    {
+      "name": "FY24 Rate Card (archived)",
+      "state": "archived",
+      "effective_start": "2024-04-15",
+      "effective_end": "2024-10-31",
+      "approval_reference": "Board minutes 2024-02-20",
+      "submitted_at": "2024-01-10T14:00:00-05:00",
+      "approved_at": "2024-02-20T20:30:00-05:00",
+      "activated_at": "2024-04-15T00:00:00-04:00",
+      "archived_at": "2025-04-15T00:00:00-04:00",
+      "_created_by_email": "nickd@demarconet.com",
+      "base_config": {
+        "model": "tier_based",
+        "base_rates_by_tier": {
+          "Premium":    {"annual": 4200},
+          "Standard":   {"annual": 3300},
+          "Restricted": {"annual": 2600}
+        },
+        "holder_multipliers": {
+          "resident":           0.75,
+          "non_resident_owner": 1.00,
+          "non_resident":       1.00
+        },
+        "lease_type_multipliers": {
+          "FULL_SEASON":   1.00,
+          "HALF_SEASON_1": 0.55,
+          "HALF_SEASON_2": 0.55,
+          "TRANSIENT":     null
+        },
+        "transient_per_foot_per_night": 4.25,
+        "amenity_fee": {"annual": 300, "waived_for_resident": true, "half_season_proration": 0.50},
+        "buy_in": {"amount": 0, "applies_to": ["non_resident"]},
+        "premium_surcharge_uses_slip_fee_modifier": true
+      }
+    },
+    {
+      "name": "FY25 Rate Card (archived)",
+      "state": "archived",
+      "effective_start": "2025-04-15",
+      "effective_end": "2025-10-31",
+      "approval_reference": "Board minutes 2025-02-18",
+      "submitted_at": "2025-01-08T13:00:00-05:00",
+      "approved_at": "2025-02-18T20:00:00-05:00",
+      "activated_at": "2025-04-15T00:00:00-04:00",
+      "archived_at": "2026-04-15T00:00:00-04:00",
+      "_created_by_email": "nickd@demarconet.com",
+      "base_config": {
+        "model": "tier_based",
+        "base_rates_by_tier": {
+          "Premium":    {"annual": 4350},
+          "Standard":   {"annual": 3400},
+          "Restricted": {"annual": 2700}
+        },
+        "holder_multipliers": {
+          "resident":           0.75,
+          "non_resident_owner": 1.00,
+          "non_resident":       1.00
+        },
+        "lease_type_multipliers": {
+          "FULL_SEASON":   1.00,
+          "HALF_SEASON_1": 0.55,
+          "HALF_SEASON_2": 0.55,
+          "TRANSIENT":     null
+        },
+        "transient_per_foot_per_night": 4.40,
+        "amenity_fee": {"annual": 325, "waived_for_resident": true, "half_season_proration": 0.50},
+        "buy_in": {"amount": 0, "applies_to": ["non_resident"]},
+        "premium_surcharge_uses_slip_fee_modifier": true
+      }
+    },
+    {
+      "name": "FY26 Active Schedule",
+      "state": "active",
+      "effective_start": "2026-04-15",
+      "effective_end": "2026-10-31",
+      "approval_reference": "Board minutes 2026-02-17",
+      "submitted_at": "2026-01-05T13:00:00-05:00",
+      "approved_at": "2026-02-17T20:30:00-05:00",
+      "activated_at": "2026-04-15T00:00:00-04:00",
+      "archived_at": null,
+      "_created_by_email": "nickd@demarconet.com",
+      "_note": "base_config matches docs/pricing/fee-schedule-fy26-seed.json — locked 2026-05-19.",
+      "base_config": {
+        "model": "tier_based",
+        "base_rates_by_tier": {
+          "Premium":    {"annual": 4500},
+          "Standard":   {"annual": 3500},
+          "Restricted": {"annual": 2800}
+        },
+        "holder_multipliers": {
+          "resident":           0.75,
+          "non_resident_owner": 0.85,
+          "non_resident":       1.00
+        },
+        "lease_type_multipliers": {
+          "FULL_SEASON":   1.00,
+          "HALF_SEASON_1": 0.55,
+          "HALF_SEASON_2": 0.55,
+          "TRANSIENT":     null
+        },
+        "transient_per_foot_per_night": 4.50,
+        "amenity_fee": {"annual": 350, "waived_for_resident": true, "half_season_proration": 0.50},
+        "buy_in": {"amount": 0, "applies_to": ["non_resident"]},
+        "premium_surcharge_uses_slip_fee_modifier": true
+      }
+    },
+    {
+      "name": "FY27 Approved (activates 2027-04-01)",
+      "state": "approved",
+      "effective_start": "2027-04-01",
+      "effective_end": "2027-10-31",
+      "approval_reference": "Board minutes 2027-03-16",
+      "submitted_at": "2027-01-12T12:00:00-05:00",
+      "approved_at": "2027-03-16T20:45:00-04:00",
+      "activated_at": null,
+      "archived_at": null,
+      "_created_by_email": "nickd@demarconet.com",
+      "_note": "3% base rate increase; non-resident-owner discount narrowed to 0.90 after Modeler analysis.",
+      "base_config": {
+        "model": "tier_based",
+        "base_rates_by_tier": {
+          "Premium":    {"annual": 4635},
+          "Standard":   {"annual": 3605},
+          "Restricted": {"annual": 2884}
+        },
+        "holder_multipliers": {
+          "resident":           0.75,
+          "non_resident_owner": 0.90,
+          "non_resident":       1.00
+        },
+        "lease_type_multipliers": {
+          "FULL_SEASON":   1.00,
+          "HALF_SEASON_1": 0.60,
+          "HALF_SEASON_2": 0.60,
+          "TRANSIENT":     null
+        },
+        "transient_per_foot_per_night": 4.75,
+        "amenity_fee": {"annual": 375, "waived_for_resident": true, "half_season_proration": 0.50},
+        "buy_in": {"amount": 0, "applies_to": ["non_resident"]},
+        "premium_surcharge_uses_slip_fee_modifier": true
+      }
+    },
+    {
+      "name": "Linda's scenario — non-resident-owner at 0.80",
+      "state": "draft",
+      "effective_start": null,
+      "effective_end": null,
+      "approval_reference": null,
+      "submitted_at": null,
+      "approved_at": null,
+      "activated_at": null,
+      "archived_at": null,
+      "_created_by_email": "linda.morrison@example.com",
+      "_note": "What-if: drop NRO multiplier from 0.85 to 0.80 — should give Modeler a meaningful delta vs. active.",
+      "base_config": {
+        "model": "tier_based",
+        "base_rates_by_tier": {
+          "Premium":    {"annual": 4500},
+          "Standard":   {"annual": 3500},
+          "Restricted": {"annual": 2800}
+        },
+        "holder_multipliers": {
+          "resident":           0.75,
+          "non_resident_owner": 0.80,
+          "non_resident":       1.00
+        },
+        "lease_type_multipliers": {
+          "FULL_SEASON":   1.00,
+          "HALF_SEASON_1": 0.55,
+          "HALF_SEASON_2": 0.55,
+          "TRANSIENT":     null
+        },
+        "transient_per_foot_per_night": 4.50,
+        "amenity_fee": {"annual": 350, "waived_for_resident": true, "half_season_proration": 0.50},
+        "buy_in": {"amount": 0, "applies_to": ["non_resident"]},
+        "premium_surcharge_uses_slip_fee_modifier": true
+      }
+    }
+  ]
+}

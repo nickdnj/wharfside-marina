@@ -1,0 +1,99 @@
+{
+  "_meta": {
+    "description": "10 app users — 1 super_admin (Nick), 1 eci_admin (Kathy), 3 board, 5 holder portal users.",
+    "totp_note": "totp_secret strings are placeholders (NOT valid base32). Admin users get them set so the UI can render '2FA configured'; real TOTP enrollment happens at first login.",
+    "password_note": "password_hash is empty for holders (magic-link). Admins get a placeholder argon2id string — real password set at first-login flow."
+  },
+  "users": [
+    {
+      "email": "nickd@demarconet.com",
+      "name": "Nick DeMarco",
+      "role": "super_admin",
+      "status": "active",
+      "_holder_email": null,
+      "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$PLACEHOLDER_SET_AT_FIRST_LOGIN",
+      "totp_secret": "PLACEHOLDER_TOTP_SECRET_NICK_AAAAAAAAAA"
+    },
+    {
+      "email": "kathy@eci-mgmt.example.com",
+      "name": "Kathy Renfro",
+      "role": "eci_admin",
+      "status": "active",
+      "_holder_email": null,
+      "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$PLACEHOLDER_SET_AT_FIRST_LOGIN",
+      "totp_secret": "PLACEHOLDER_TOTP_SECRET_KATHY_BBBBBBBBBB"
+    },
+    {
+      "email": "linda.morrison@example.com",
+      "name": "Linda Morrison",
+      "role": "board",
+      "status": "active",
+      "_holder_email": "linda.morrison@example.com",
+      "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$PLACEHOLDER_SET_AT_FIRST_LOGIN",
+      "totp_secret": "PLACEHOLDER_TOTP_SECRET_LINDA_CCCCCCCCCC"
+    },
+    {
+      "email": "mike.thornton@example.com",
+      "name": "Michael Thornton",
+      "role": "board",
+      "status": "active",
+      "_holder_email": "mike.thornton@example.com",
+      "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$PLACEHOLDER_SET_AT_FIRST_LOGIN",
+      "totp_secret": "PLACEHOLDER_TOTP_SECRET_MIKE_DDDDDDDDDD"
+    },
+    {
+      "email": "kelly.russo@example.com",
+      "name": "Kelly Russo",
+      "role": "board",
+      "status": "active",
+      "_holder_email": "kelly.russo@example.com",
+      "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$PLACEHOLDER_SET_AT_FIRST_LOGIN",
+      "totp_secret": "PLACEHOLDER_TOTP_SECRET_KELLY_EEEEEEEEEE"
+    },
+    {
+      "email": "walt.beaumont@example.com",
+      "name": "Walter Beaumont",
+      "role": "holder",
+      "status": "active",
+      "_holder_email": "walt.beaumont@example.com",
+      "password_hash": null,
+      "totp_secret": null
+    },
+    {
+      "email": "vincent.marciano@example.com",
+      "name": "Vincent Marciano",
+      "role": "holder",
+      "status": "active",
+      "_holder_email": "vincent.marciano@example.com",
+      "password_hash": null,
+      "totp_secret": null
+    },
+    {
+      "email": "ken.park@example.com",
+      "name": "Kenneth Park",
+      "role": "holder",
+      "status": "active",
+      "_holder_email": "ken.park@example.com",
+      "password_hash": null,
+      "totp_secret": null
+    },
+    {
+      "email": "jon.bristol@example.com",
+      "name": "Jonathan Bristol",
+      "role": "holder",
+      "status": "active",
+      "_holder_email": "jon.bristol@example.com",
+      "password_hash": null,
+      "totp_secret": null
+    },
+    {
+      "email": "rich.goldberg@example.com",
+      "name": "Richard Goldberg",
+      "role": "holder",
+      "status": "active",
+      "_holder_email": "rich.goldberg@example.com",
+      "password_hash": null,
+      "totp_secret": null
+    }
+  ]
+}
