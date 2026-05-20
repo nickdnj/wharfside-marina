@@ -22,13 +22,37 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+  "https://wharfsidemb.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Wharfside Marina",
     template: "%s · Wharfside Marina",
   },
   description:
-    "Wharfside Manor Condominium Association marina — rules, map, forms, and transient slip requests.",
+    "Wharfside Manor Condominium Association marina — rules, map, forms, and transient slip requests on the Shrewsbury River in Monmouth Beach, NJ.",
+  applicationName: "Wharfside Marina",
+  authors: [{ name: "Wharfside Manor Condominium Association" }],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "Wharfside Marina",
+    title: "Wharfside Marina",
+    description:
+      "A private slip community on the Shrewsbury River in Monmouth Beach, NJ.",
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wharfside Marina",
+    description:
+      "A private slip community on the Shrewsbury River in Monmouth Beach, NJ.",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
