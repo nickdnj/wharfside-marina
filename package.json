@@ -18,6 +18,7 @@
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx scripts/seed-dev.ts",
+    "verify:infra": "node scripts/verify-infra.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
